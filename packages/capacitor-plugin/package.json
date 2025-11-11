@@ -1,8 +1,8 @@
 {
-  "name": "@capacitor/watch",
-  "version": "0.1.12",
+  "name": "@vetcalculators/capacitor-watch",
+  "version": "1.0.0",
   "license": "MIT",
-  "description": "Provide Watch interfaces and communication",
+  "description": "Enhanced Capacitor Watch plugin with bidirectional messaging support for Apple Watch communication",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
@@ -15,18 +15,25 @@
     "CapacitorWatch.podspec",
     "CapWatch-Watch-SPM"
   ],
-  "author": "Ionic Team",
+  "author": "VetCalculators (forked from Ionic Team)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ionic-team/CapacitorWatch.git"
+    "url": "https://github.com/macsupport/CapacitorWatchEnhanced.git"
   },
   "bugs": {
-    "url": "https://github.com/ionic-team/capacitorwatch/issues"
+    "url": "https://github.com/macsupport/CapacitorWatchEnhanced/issues"
   },
   "keywords": [
     "capacitor",
     "plugin",
-    "native"
+    "native",
+    "watch",
+    "apple-watch",
+    "watchos",
+    "wearable",
+    "watchconnectivity",
+    "bidirectional",
+    "messaging"
   ],
   "scripts": {
     "verify": "pnpm run verify:ios && pnpm run verify:android && pnpm run verify:web",

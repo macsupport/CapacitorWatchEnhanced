@@ -1,15 +1,178 @@
-# @capacitor/watch
+# CapacitorWatchEnhanced
 
-<p align="center">
-  <a href="https://github.com/ionic-team/capacitorwatch/actions?query=workflow%3ACI"><img src="https://img.shields.io/github/actions/workflow/status/ionic-team/capacitor/ci.yml?style=flat-square" /></a>
-  <a href="https://www.npmjs.com/package/@capacitor/watch"><img src="https://img.shields.io/npm/dw/@capacitor/watch?style=flat-square" /></a>
-  <a href="https://www.npmjs.com/package/@capacitor/watch"><img src="https://img.shields.io/npm/v/@capacitor/watch?style=flat-square" /></a>
-  <a href="https://www.npmjs.com/package/@capacitor/watch"><img src="https://img.shields.io/npm/l/@capacitor/watch?style=flat-square" /></a>
-</p>
-<p align="center">
-  <a href="https://capacitorjs.com/docs"><img src="https://img.shields.io/static/v1?label=docs&message=capacitorjs.com&color=blue&style=flat-square" /></a>
-  <a href="https://twitter.com/capacitorjs"><img src="https://img.shields.io/twitter/follow/capacitorjs" /></a>
-</p>
+**Enhanced Capacitor Watch Plugin with Full Bidirectional Messaging**
+
+> Forked from [@capacitor/watch](https://github.com/ionic-team/CapacitorWatch) with added support for Watch → Phone communication
+
+---
+
+## 🎯 What's New in v1.0.0
+
+This fork adds **full bidirectional messaging** between iPhone and Apple Watch:
+
+✅ **NEW:** Watch → Phone event listeners in JavaScript
+✅ **NEW:** `messageReceived` event for incoming watch messages
+✅ **NEW:** `messageReceivedWithReply` for interactive request/response patterns
+✅ **NEW:** Standard WatchConnectivity methods: `sendMessage()`, `updateApplicationContext()`, `transferUserInfo()`
+✅ **NEW:** `getInfo()` method to check watch pairing and reachability status
+✅ **NEW:** `reachabilityChanged` listener for connection status monitoring
+✅ **100% Backward Compatible** - All existing `@capacitor/watch` code still works
+
+### Why This Fork?
+
+The original `@capacitor/watch` plugin only supports **Phone → Watch** communication. It has no way for JavaScript to receive messages from the watch. This fork adds the missing WCSessionDelegate event forwarding to enable true bidirectional communication.
+
+**Perfect for:**
+- Interactive watch apps that need to request data from the phone
+- Apps that need to know when watch becomes reachable/unreachable
+- Request/response patterns with reply handlers
+- Real-time watch-to-phone notifications
+
+---
+
+## 📚 Documentation
+
+- **[ENHANCEMENTS.md](./ENHANCEMENTS.md)** - Complete API reference and examples
+- **[VETDRUGS_INTEGRATION.md](./VETDRUGS_INTEGRATION.md)** - VetDrugs-specific integration guide
+- **README.md (below)** - Original installation and setup guide
+
+---
+
+## 🚀 Quick Start
+
+### Installation
+
+```bash
+# Clone and build
+git clone https://github.com/macsupport/CapacitorWatchEnhanced.git
+cd CapacitorWatchEnhanced/packages/capacitor-plugin
+pnpm install
+pnpm run build
+
+# Install in your app
+cd /path/to/your/capacitor/app
+npm install file:///path/to/CapacitorWatchEnhanced/packages/capacitor-plugin
+npx cap sync ios
+```
+
+### Basic Usage
+
+```typescript
+import { Watch } from '@vetcalculators/capacitor-watch';
+
+// Check if watch is available
+const info = await Watch.getInfo();
+if (info.isSupported && info.isPaired && info.isWatchAppInstalled) {
+  console.log('✅ Watch is ready!');
+}
+
+// Listen for messages from watch
+Watch.addListener('messageReceived', (message) => {
+  console.log('Received from watch:', message);
+
+  if (message.type === 'requestData') {
+    // Handle watch request
+    handleWatchRequest(message.payload);
+  }
+});
+
+// Send data to watch
+await Watch.updateApplicationContext({
+  data: {
+    currentState: 'updated',
+    timestamp: Date.now()
+  }
+});
+```
+
+---
+
+## 🔄 Migration from @capacitor/watch
+
+**Zero breaking changes!** Just update your import:
+
+```diff
+- import { Watch } from '@capacitor/watch';
++ import { Watch } from '@vetcalculators/capacitor-watch';
+```
+
+All existing methods (`updateWatchUI`, `updateWatchData`, `runCommand` listener) work exactly the same.
+
+---
+
+## 📦 What's Included
+
+### Outbound Methods (Phone → Watch)
+- `updateWatchUI()` - Legacy UI definition (backward compatible)
+- `updateWatchData()` - Legacy data updates (backward compatible)
+- `sendMessage()` - Interactive messaging with reply handlers **[NEW]**
+- `updateApplicationContext()` - Latest-value-only sync **[NEW]**
+- `transferUserInfo()` - Queued background transfers **[NEW]**
+- `getInfo()` - Check watch status **[NEW]**
+
+### Inbound Events (Watch → Phone)
+- `messageReceived` - Simple messages from watch **[NEW]**
+- `messageReceivedWithReply` - Messages expecting reply **[NEW]**
+- `applicationContextReceived` - Context updates from watch **[NEW]**
+- `userInfoReceived` - Background transfers from watch **[NEW]**
+- `reachabilityChanged` - Watch connection status **[NEW]**
+- `activationStateChanged` - Session state changes **[NEW]**
+- `runCommand` - Legacy command listener (backward compatible)
+
+---
+
+## 🛠️ Technical Implementation
+
+### Architecture Changes
+
+1. **CapWatchDelegate.swift** - Enhanced with `notifyListeners()` calls to forward all WCSessionDelegate events to JavaScript
+2. **WatchPlugin.swift** - Added new plugin methods and reply handler dictionary
+3. **WatchPlugin.m** - Updated Objective-C bridge with new method registrations
+4. **definitions.ts** - Complete TypeScript definitions with JSDoc
+5. **Weak Reference Pattern** - Plugin → Delegate → Plugin to prevent retain cycles
+
+### Thread Safety
+- All delegate callbacks forwarded to JavaScript on main thread
+- Reply handlers stored in thread-safe dictionary
+- Automatic cleanup after reply sent
+
+---
+
+## 📱 Platform Support
+
+- ✅ **iOS** - Full support (iOS 14+)
+- ✅ **watchOS** - Full support (watchOS 7+)
+- ⚠️ **Web** - Stubs only (returns "not supported")
+- ❌ **Android** - Not supported (no WatchConnectivity on Android)
+
+---
+
+## 🤝 Contributing
+
+Found a bug or want to add features?
+1. Open an issue: https://github.com/macsupport/CapacitorWatchEnhanced/issues
+2. Submit a PR with tests
+3. Update documentation
+
+---
+
+## 📄 License
+
+MIT (same as original @capacitor/watch)
+
+---
+
+## 🙏 Credits
+
+- **Enhanced by:** VetCalculators / @macsupport
+- **Original plugin:** Ionic Team - [@capacitor/watch](https://github.com/ionic-team/CapacitorWatch)
+- **Use case:** VetDrugs veterinary drug calculator with Apple Watch support
+
+---
+
+# Original @capacitor/watch Documentation
+
+Below is the original setup guide from the Ionic Team's @capacitor/watch plugin.
 
 ---
 

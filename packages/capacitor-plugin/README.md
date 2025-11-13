@@ -225,33 +225,28 @@ npx cap sync
 
 <docgen-index>
 
-* [`addListener('runCommand', ...)`](#addlistenerruncommand-)
 * [`updateWatchUI(...)`](#updatewatchui)
 * [`updateWatchData(...)`](#updatewatchdata)
+* [`sendMessage(...)`](#sendmessage)
+* [`updateApplicationContext(...)`](#updateapplicationcontext)
+* [`transferUserInfo(...)`](#transferuserinfo)
+* [`replyToMessage(...)`](#replytomessage)
+* [`getInfo()`](#getinfo)
+* [`addListener('messageReceived', ...)`](#addlistenermessagereceived-)
+* [`addListener('messageReceivedWithReply', ...)`](#addlistenermessagereceivedwithreply-)
+* [`addListener('applicationContextReceived', ...)`](#addlistenerapplicationcontextreceived-)
+* [`addListener('userInfoReceived', ...)`](#addlisteneruserinforeceived-)
+* [`addListener('reachabilityChanged', ...)`](#addlistenerreachabilitychanged-)
+* [`addListener('activationStateChanged', ...)`](#addlisteneractivationstatechanged-)
+* [`addListener('sessionBecameInactive', ...)`](#addlistenersessionbecameinactive-)
+* [`addListener('sessionDeactivated', ...)`](#addlistenersessiondeactivated-)
+* [`addListener('runCommand', ...)`](#addlistenerruncommand-)
 * [Interfaces](#interfaces)
 
 </docgen-index>
 
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
-
-### addListener('runCommand', ...)
-
-```typescript
-addListener(eventName: 'runCommand', listenerFunc: (data: { command: string; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
-```
-
-Listen for a command from the watch
-
-| Param              | Type                                                 |
-| ------------------ | ---------------------------------------------------- |
-| **`eventName`**    | <code>'runCommand'</code>                            |
-| **`listenerFunc`** | <code>(data: { command: string; }) =&gt; void</code> |
-
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
-
---------------------
-
 
 ### updateWatchUI(...)
 
@@ -274,11 +269,267 @@ Replaces the current watch UI with watchUI
 updateWatchData(options: { data: { [key: string]: string; }; }) => Promise<void>
 ```
 
-Updates the watch's state data
+Updates the watch's state data (variables in Text() elements)
 
 | Param         | Type                                               |
 | ------------- | -------------------------------------------------- |
 | **`options`** | <code>{ data: { [key: string]: string; }; }</code> |
+
+--------------------
+
+
+### sendMessage(...)
+
+```typescript
+sendMessage(options: { message: any; }) => Promise<{ reply?: any; }>
+```
+
+Send interactive message to watch (requires watch to be reachable)
+This method waits for a reply from the watch.
+Use this for request/response patterns when the watch is actively reachable.
+
+| Param         | Type                           | Description                             |
+| ------------- | ------------------------------ | --------------------------------------- |
+| **`options`** | <code>{ message: any; }</code> | - Object containing the message to send |
+
+**Returns:** <code>Promise&lt;{ reply?: any; }&gt;</code>
+
+--------------------
+
+
+### updateApplicationContext(...)
+
+```typescript
+updateApplicationContext(options: { data: any; }) => Promise<{ success: boolean; }>
+```
+
+Update application context (latest-value-only, background-capable)
+The watch receives only the most recent context. Previous values are overwritten.
+This is ideal for syncing the current app state.
+
+| Param         | Type                        | Description                                             |
+| ------------- | --------------------------- | ------------------------------------------------------- |
+| **`options`** | <code>{ data: any; }</code> | - Object containing data to send as application context |
+
+**Returns:** <code>Promise&lt;{ success: boolean; }&gt;</code>
+
+--------------------
+
+
+### transferUserInfo(...)
+
+```typescript
+transferUserInfo(options: { userInfo: any; }) => Promise<{ success: boolean; isTransferring: boolean; }>
+```
+
+Transfer user info to watch (background-capable queue)
+All transfers are queued and delivered in order. Use this for important
+data that must not be lost (e.g., calculation results, saved presets).
+
+| Param         | Type                            | Description                              |
+| ------------- | ------------------------------- | ---------------------------------------- |
+| **`options`** | <code>{ userInfo: any; }</code> | - Object containing userInfo to transfer |
+
+**Returns:** <code>Promise&lt;{ success: boolean; isTransferring: boolean; }&gt;</code>
+
+--------------------
+
+
+### replyToMessage(...)
+
+```typescript
+replyToMessage(options: { callbackId: string; reply: any; }) => Promise<void>
+```
+
+Reply to a message received with reply handler
+Use this to respond to messages received via the 'messageReceivedWithReply' event.
+
+| Param         | Type                                             | Description                                   |
+| ------------- | ------------------------------------------------ | --------------------------------------------- |
+| **`options`** | <code>{ callbackId: string; reply: any; }</code> | - Object containing callbackId and reply data |
+
+--------------------
+
+
+### getInfo()
+
+```typescript
+getInfo() => Promise<{ isSupported: boolean; isReachable: boolean; isPaired: boolean; isWatchAppInstalled: boolean; activationState?: number; }>
+```
+
+Get watch connectivity status and information
+
+**Returns:** <code>Promise&lt;{ isSupported: boolean; isReachable: boolean; isPaired: boolean; isWatchAppInstalled: boolean; activationState?: number; }&gt;</code>
+
+--------------------
+
+
+### addListener('messageReceived', ...)
+
+```typescript
+addListener(eventName: 'messageReceived', listenerFunc: (message: any) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Listen for simple messages from watch (no reply expected)
+This is called when the watch sends a message using sendMessage() or transferUserInfo()
+
+| Param              | Type                                   | Description                                    |
+| ------------------ | -------------------------------------- | ---------------------------------------------- |
+| **`eventName`**    | <code>'messageReceived'</code>         | - Must be 'messageReceived'                    |
+| **`listenerFunc`** | <code>(message: any) =&gt; void</code> | - Callback function receiving the message data |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('messageReceivedWithReply', ...)
+
+```typescript
+addListener(eventName: 'messageReceivedWithReply', listenerFunc: (message: any & { _replyCallbackId: string; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Listen for messages from watch that expect a reply
+Use replyToMessage() with the _replyCallbackId to send response
+
+| Param              | Type                                    | Description                                                 |
+| ------------------ | --------------------------------------- | ----------------------------------------------------------- |
+| **`eventName`**    | <code>'messageReceivedWithReply'</code> | - Must be 'messageReceivedWithReply'                        |
+| **`listenerFunc`** | <code>(message: any) =&gt; void</code>  | - Callback function receiving message with _replyCallbackId |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('applicationContextReceived', ...)
+
+```typescript
+addListener(eventName: 'applicationContextReceived', listenerFunc: (context: any) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Listen for application context updates from watch
+This is called when watch updates its application context (latest-value-only)
+
+| Param              | Type                                      | Description                                    |
+| ------------------ | ----------------------------------------- | ---------------------------------------------- |
+| **`eventName`**    | <code>'applicationContextReceived'</code> | - Must be 'applicationContextReceived'         |
+| **`listenerFunc`** | <code>(context: any) =&gt; void</code>    | - Callback function receiving the context data |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('userInfoReceived', ...)
+
+```typescript
+addListener(eventName: 'userInfoReceived', listenerFunc: (userInfo: any) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Listen for user info transfers from watch
+This is called for each queued userInfo transfer from the watch
+
+| Param              | Type                                    | Description                                      |
+| ------------------ | --------------------------------------- | ------------------------------------------------ |
+| **`eventName`**    | <code>'userInfoReceived'</code>         | - Must be 'userInfoReceived'                     |
+| **`listenerFunc`** | <code>(userInfo: any) =&gt; void</code> | - Callback function receiving the user info data |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('reachabilityChanged', ...)
+
+```typescript
+addListener(eventName: 'reachabilityChanged', listenerFunc: (data: { isReachable: boolean; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Listen for watch reachability changes
+Reachable = watch is actively connected and can receive messages immediately
+Not reachable = messages will be queued for later delivery
+
+| Param              | Type                                                      | Description                                       |
+| ------------------ | --------------------------------------------------------- | ------------------------------------------------- |
+| **`eventName`**    | <code>'reachabilityChanged'</code>                        | - Must be 'reachabilityChanged'                   |
+| **`listenerFunc`** | <code>(data: { isReachable: boolean; }) =&gt; void</code> | - Callback function receiving reachability status |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('activationStateChanged', ...)
+
+```typescript
+addListener(eventName: 'activationStateChanged', listenerFunc: (data: { state: number; error?: string; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Listen for WatchConnectivity session activation state changes
+State values: 0 = notActivated, 1 = inactive, 2 = activated
+
+| Param              | Type                                                               | Description                                    |
+| ------------------ | ------------------------------------------------------------------ | ---------------------------------------------- |
+| **`eventName`**    | <code>'activationStateChanged'</code>                              | - Must be 'activationStateChanged'             |
+| **`listenerFunc`** | <code>(data: { state: number; error?: string; }) =&gt; void</code> | - Callback function receiving activation state |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('sessionBecameInactive', ...)
+
+```typescript
+addListener(eventName: 'sessionBecameInactive', listenerFunc: (data: {}) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Listen for session inactive events (iOS only)
+
+| Param              | Type                                 | Description                       |
+| ------------------ | ------------------------------------ | --------------------------------- |
+| **`eventName`**    | <code>'sessionBecameInactive'</code> | - Must be 'sessionBecameInactive' |
+| **`listenerFunc`** | <code>(data: {}) =&gt; void</code>   | - Callback function               |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('sessionDeactivated', ...)
+
+```typescript
+addListener(eventName: 'sessionDeactivated', listenerFunc: (data: {}) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Listen for session deactivated events (iOS only)
+The session is automatically reactivated after this event
+
+| Param              | Type                               | Description                    |
+| ------------------ | ---------------------------------- | ------------------------------ |
+| **`eventName`**    | <code>'sessionDeactivated'</code>  | - Must be 'sessionDeactivated' |
+| **`listenerFunc`** | <code>(data: {}) =&gt; void</code> | - Callback function            |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('runCommand', ...)
+
+```typescript
+addListener(eventName: 'runCommand', listenerFunc: (data: { command: string; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Legacy listener for watch commands (backward compatibility)
+
+| Param              | Type                                                 | Description                                  |
+| ------------------ | ---------------------------------------------------- | -------------------------------------------- |
+| **`eventName`**    | <code>'runCommand'</code>                            | - Must be 'runCommand'                       |
+| **`listenerFunc`** | <code>(data: { command: string; }) =&gt; void</code> | - Callback function receiving command string |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
 --------------------
 

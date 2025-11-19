@@ -29,7 +29,9 @@ public class WatchPlugin: CAPPlugin {
                                                object: nil)
 
         // Link delegate to this plugin instance for bidirectional communication
+        print("📱 DIAGNOSTIC: Linking WatchPlugin to CapWatchSessionDelegate...")
         CapWatchSessionDelegate.shared.plugin = self
+        print("📱 DIAGNOSTIC: Delegate.plugin linked successfully. Is nil? \(CapWatchSessionDelegate.shared.plugin == nil)")
 
         print("📱 WatchPlugin loaded successfully")
     }

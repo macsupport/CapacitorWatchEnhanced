@@ -70,6 +70,13 @@ public class CapWatchSessionDelegate : NSObject, WCSessionDelegate {
     public func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
         print("📱 PHONE WatchDelegate didReceiveMessage with replyHandler: \(message)")
 
+        // DIAGNOSTIC: Check if plugin is linked
+        if plugin == nil {
+            print("❌ CRITICAL: plugin is NIL! JavaScript listeners cannot be notified!")
+        } else {
+            print("✅ DIAGNOSTIC: plugin is linked, will notify JavaScript listeners")
+        }
+
         // Generate callback ID for async reply support
         let callbackId = UUID().uuidString
         var messageWithCallback = message
@@ -79,7 +86,9 @@ public class CapWatchSessionDelegate : NSObject, WCSessionDelegate {
         plugin?.pendingReplies[callbackId] = replyHandler
 
         // Forward to JavaScript with callback ID
+        print("📱 DIAGNOSTIC: Calling plugin.notifyListeners('messageReceivedWithReply')...")
         plugin?.notifyListeners("messageReceivedWithReply", data: messageWithCallback)
+        print("📱 DIAGNOSTIC: notifyListeners call completed")
 
         // Also handle with legacy logic
         handleWatchMessage(message)

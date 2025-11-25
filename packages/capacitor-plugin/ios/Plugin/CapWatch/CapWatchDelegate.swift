@@ -6,7 +6,6 @@
 //
 
 import WatchConnectivity
-import CapacitorBackgroundRunner
 
 public class CapWatchSessionDelegate : NSObject, WCSessionDelegate {
     var WATCH_UI = ""
@@ -50,17 +49,7 @@ public class CapWatchSessionDelegate : NSObject, WCSessionDelegate {
     public func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         print("📱 PHONE WatchDelegate didReceiveMessage: \(message)")
 
-        // Keep existing BackgroundRunner integration
-        var args: [String: Any] = [:]
-        args["message"] = message
-
-        do {
-            try BackgroundRunner.shared.dispatchEvent(event: "WatchConnectivity_didReceiveMessage", inputArgs: args)
-        } catch {
-            print("⚠️ BackgroundRunner dispatch error: \(error)")
-        }
-
-        // NEW: Forward to JavaScript listeners (generic message)
+        // Forward to JavaScript listeners (generic message)
         plugin?.notifyListeners("messageReceived", data: message)
 
         // Keep legacy handleWatchMessage for backward compatibility
@@ -107,17 +96,7 @@ public class CapWatchSessionDelegate : NSObject, WCSessionDelegate {
     public func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any] = [:]) {
         print("📱 PHONE WatchDelegate didReceiveUserInfo: \(userInfo)")
 
-        // Keep existing BackgroundRunner integration
-        var args: [String: Any] = [:]
-        args["userInfo"] = userInfo
-
-        do {
-            try BackgroundRunner.shared.dispatchEvent(event: "WatchConnectivity_didReceiveUserInfo", inputArgs: args)
-        } catch {
-            print("⚠️ BackgroundRunner dispatch error: \(error)")
-        }
-
-        // NEW: Forward to JavaScript listeners
+        // Forward to JavaScript listeners
         plugin?.notifyListeners("userInfoReceived", data: userInfo)
 
         // Keep legacy behavior

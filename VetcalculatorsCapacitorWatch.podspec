@@ -20,5 +20,4 @@ Pod::Spec.new do |s|
 
   # Capacitor dependency
   s.dependency 'Capacitor'
-  s.dependency 'CapacitorBackgroundRunner'
 end

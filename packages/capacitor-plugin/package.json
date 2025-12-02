@@ -19,7 +19,7 @@
     "CapacitorWatch.podspec",
     "CapWatch-Watch-SPM"
   ],
-  "author": "VetCalculators (forked from Ionic Team)",
+  "author": "MacSupport (forked from Ionic Team)",
   "repository": {
     "type": "git",
     "url": "https://github.com/macsupport/CapacitorWatchEnhanced.git"

@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "license": "MIT",
   "description": "Enhanced Capacitor Watch plugin with bidirectional messaging support for Apple Watch communication",
-  "main": "dist/plugin.cjs.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
+  "main": "./dist/esm/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+
+
+
+ 
   "unpkg": "dist/plugin.js",
   "files": [
     "android/src/main/",

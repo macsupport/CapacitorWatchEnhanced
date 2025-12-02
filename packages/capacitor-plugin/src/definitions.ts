@@ -145,7 +145,7 @@ export interface WatchPlugin {
   addListener(
     eventName: 'messageReceived',
     listenerFunc: (message: any) => void
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listen for messages from watch that expect a reply
@@ -170,7 +170,7 @@ export interface WatchPlugin {
   addListener(
     eventName: 'messageReceivedWithReply',
     listenerFunc: (message: any & { _replyCallbackId: string }) => void
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listen for application context updates from watch
@@ -183,7 +183,7 @@ export interface WatchPlugin {
   addListener(
     eventName: 'applicationContextReceived',
     listenerFunc: (context: any) => void
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listen for user info transfers from watch
@@ -196,7 +196,7 @@ export interface WatchPlugin {
   addListener(
     eventName: 'userInfoReceived',
     listenerFunc: (userInfo: any) => void
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listen for watch reachability changes
@@ -220,7 +220,7 @@ export interface WatchPlugin {
   addListener(
     eventName: 'reachabilityChanged',
     listenerFunc: (data: { isReachable: boolean }) => void
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listen for WatchConnectivity session activation state changes
@@ -233,7 +233,7 @@ export interface WatchPlugin {
   addListener(
     eventName: 'activationStateChanged',
     listenerFunc: (data: { state: number; error?: string }) => void
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listen for session inactive events (iOS only)
@@ -245,7 +245,7 @@ export interface WatchPlugin {
   addListener(
     eventName: 'sessionBecameInactive',
     listenerFunc: (data: {}) => void
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listen for session deactivated events (iOS only)
@@ -258,7 +258,7 @@ export interface WatchPlugin {
   addListener(
     eventName: 'sessionDeactivated',
     listenerFunc: (data: {}) => void
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Legacy listener for watch commands (backward compatibility)
@@ -271,5 +271,5 @@ export interface WatchPlugin {
   addListener(
     eventName: 'runCommand',
     listenerFunc: (data: { command: string }) => void
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 }

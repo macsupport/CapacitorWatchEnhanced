@@ -22,5 +22,13 @@
   },
   "dependencies": {
     "nx": "^16.5.1"
+  },
+  "capacitor": {
+    "ios": {
+      "src": "packages/capacitor-plugin/ios"
+    },
+    "android": {
+      "src": "packages/capacitor-plugin/android"
+    }
   }
 }

@@ -37,7 +37,7 @@ All plugin enhancements have been successfully implemented and committed to your
 
 3. **Package Configuration:**
    - ✅ `packages/capacitor-plugin/package.json`
-     - Changed name to `@vetcalculators/capacitor-watch`
+     - Changed name to `@macsupport/capacitor-watch-enhanced`
      - Bumped version to `1.0.0`
      - Updated repository URLs
      - Added descriptive keywords
@@ -96,7 +96,7 @@ npx cap sync ios
 Just update your import:
 ```typescript
 // src/js/watch/watchHomeIntegration.js
-import { Watch } from '@vetcalculators/capacitor-watch';
+import { Watch } from '@macsupport/capacitor-watch-enhanced';
 
 // Your existing code should work - just add the listener
 export async function initializeWatchHomeListeners(context) {
@@ -340,7 +340,7 @@ console.log('Watch Status:', info);
 - [x] Updated WatchPlugin.m Objective-C bridge
 - [x] Wrote complete TypeScript definitions
 - [x] Updated web.ts stubs
-- [x] Changed package name to @vetcalculators/capacitor-watch
+- [x] Changed package name to @macsupport/capacitor-watch-enhanced
 - [x] Bumped version to 1.0.0
 - [x] Created comprehensive documentation
 - [x] Committed all changes to repository

@@ -58,7 +58,7 @@ npx cap sync ios
 ### Basic Usage
 
 ```typescript
-import { Watch } from '@vetcalculators/capacitor-watch';
+import { Watch } from '@macsupport/capacitor-watch-enhanced';
 
 // Check if watch is available
 const info = await Watch.getInfo();
@@ -93,7 +93,7 @@ await Watch.updateApplicationContext({
 
 ```diff
 - import { Watch } from '@capacitor/watch';
-+ import { Watch } from '@vetcalculators/capacitor-watch';
++ import { Watch } from '@macsupport/capacitor-watch-enhanced';
 ```
 
 All existing methods (`updateWatchUI`, `updateWatchData`, `runCommand` listener) work exactly the same.

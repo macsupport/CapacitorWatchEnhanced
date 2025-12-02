@@ -28,7 +28,7 @@ Replace your existing `watchHomeIntegration.js` with this working version:
 
 ```typescript
 // src/js/watch/watchHomeIntegration.js
-import { Watch } from '@vetcalculators/capacitor-watch';
+import { Watch } from '@macsupport/capacitor-watch-enhanced';
 import { Capacitor } from '@capacitor/core';
 import { getSavedPages } from '../drugServices.js';
 

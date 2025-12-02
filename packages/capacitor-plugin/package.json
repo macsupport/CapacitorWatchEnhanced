@@ -1,5 +1,5 @@
 {
-  "name": "@vetcalculators/capacitor-watch",
+  "name": "@macsupport/capacitor-watch-enhanced",
   "version": "1.0.0",
   "license": "MIT",
   "description": "Enhanced Capacitor Watch plugin with bidirectional messaging support for Apple Watch communication",

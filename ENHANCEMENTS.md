@@ -45,7 +45,7 @@ npx cap sync ios
 Send interactive message to watch (requires watch to be reachable).
 
 ```typescript
-import { Watch } from '@vetcalculators/capacitor-watch';
+import { Watch } from '@macsupport/capacitor-watch-enhanced';
 
 try {
   const result = await Watch.sendMessage({
@@ -137,7 +137,7 @@ if (info.isSupported && info.isPaired && info.isWatchAppInstalled) {
 Listen for simple messages from watch (no reply expected).
 
 ```typescript
-import { Watch } from '@vetcalculators/capacitor-watch';
+import { Watch } from '@macsupport/capacitor-watch-enhanced';
 
 // Set up listener
 const listener = await Watch.addListener('messageReceived', async (message) => {
@@ -255,7 +255,7 @@ Based on your use case, here's how to integrate with your existing `watchHomeInt
 
 ```typescript
 // src/js/watch/watchHomeIntegration.js
-import { Watch } from '@vetcalculators/capacitor-watch';
+import { Watch } from '@macsupport/capacitor-watch-enhanced';
 import { Capacitor } from '@capacitor/core';
 import { getSavedPages } from '../drugServices.js';
 
@@ -507,7 +507,7 @@ VetDrugsWatch.addListener('messageReceived', handler);
 
 ```typescript
 // NEW (enhanced plugin)
-import { Watch } from '@vetcalculators/capacitor-watch';
+import { Watch } from '@macsupport/capacitor-watch-enhanced';
 Watch.addListener('messageReceived', handler);
 ```
 

@@ -164,7 +164,7 @@ MIT (same as original @capacitor/watch)
 
 ## 🙏 Credits
 
-- **Enhanced by:** VetCalculators / @macsupport
+- **Enhanced by:** Michael Sozanski DVM DABVP/ @macsupport
 - **Original plugin:** Ionic Team - [@capacitor/watch](https://github.com/ionic-team/CapacitorWatch)
 - **Use case:** VetDrugs veterinary drug calculator with Apple Watch support
 

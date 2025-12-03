@@ -37,7 +37,13 @@ public class WatchPlugin: CAPPlugin {
     }
     
     @objc func handleApplicationActive(notification: NSNotification) {
-        assert(WCSession.isSupported(), "This sample requires Watch Connectivity support!")
+        // ✅ GRACEFUL DEGRADATION: Check if Watch Connectivity is supported (iPhone only, not iPad)
+        guard WCSession.isSupported() else {
+            print("⚠️ Watch Connectivity not supported on this device (iPad or unsupported platform)")
+            return
+        }
+
+        print("📱 Watch Connectivity supported - initializing WCSession")
         WCSession.default.delegate = CapWatchSessionDelegate.shared
         WCSession.default.activate()
     }
@@ -62,6 +68,12 @@ public class WatchPlugin: CAPPlugin {
             return
         }
         
+        
+        guard WCSession.isSupported() else {
+            print("⚠️ Watch not supported on this device")
+            call.resolve(["success": false, "error": "Watch not supported on iPad"])
+            return
+        }
         CapWatchSessionDelegate.shared.WATCH_UI = newUI
         CapWatchSessionDelegate.shared.sendUI()
         
@@ -73,6 +85,13 @@ public class WatchPlugin: CAPPlugin {
             return
         }
 
+        
+
+        guard WCSession.isSupported() else {
+            print("⚠️ Watch not supported on this device")
+            call.resolve()
+            return
+        }
         CapWatchSessionDelegate.shared.updateViewData(newData)
         call.resolve()
     }
@@ -82,6 +101,11 @@ public class WatchPlugin: CAPPlugin {
     @objc func sendMessage(_ call: CAPPluginCall) {
         guard let message = call.getObject("message") else {
             call.reject("Missing message parameter")
+            return
+        }
+
+        guard WCSession.isSupported() else {
+            call.reject("Watch not supported on this device (iPad)")
             return
         }
 
@@ -107,6 +131,11 @@ public class WatchPlugin: CAPPlugin {
             return
         }
 
+        guard WCSession.isSupported() else {
+            call.reject("Watch not supported on this device (iPad)")
+            return
+        }
+
         print("📱 WatchPlugin updateApplicationContext: \(data)")
 
         do {
@@ -121,6 +150,11 @@ public class WatchPlugin: CAPPlugin {
     @objc func transferUserInfo(_ call: CAPPluginCall) {
         guard let userInfo = call.getObject("userInfo") else {
             call.reject("Missing userInfo parameter")
+            return
+        }
+
+        guard WCSession.isSupported() else {
+            call.reject("Watch not supported on this device (iPad)")
             return
         }
 
